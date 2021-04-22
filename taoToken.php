@@ -1,33 +1,32 @@
 <?php
-// require __DIR__ . '/vendor/autoload.php';
-// include('function.php');
-// include('connect/connect.php');
+require("jwt.php");
+require __DIR__ . '/vendor/autoload.php';
+include('function.php');
+include('connect/connect.php');
 
-// $key = "example_key";
+$key = "example_key";
 $json = file_get_contents('php://input');
 $obj = json_decode($json, true);
 $userName = $obj['userName'];
 $password = md5($obj['password']);
 
-
-require("jwt.php");
-require("dbCon.php");
-
-$qr = "SELECT * FROM account
-       WHERE userName ='$userName'
-       AND password ='$password'
+$sql = "SELECT a.id, a.userID, a.userName, a.password, a.permission, a.created_at, a.updated_at, b.status FROM account as a
+        inner join baccount as b
+        on a.userID = b.id
+       WHERE a.userName ='$userName'
+       AND a.password ='$password'
+       AND b.status = 1
        ";
-$accounts =$mysqli->query($qr);
-if(mysqli_num_rows($accounts)==1){
-    $a = mysqli_fetch_array($accounts);
-    $token = array();
-    $token["id"]=$a["id"];
-    $token["userID"]=$a["userID"];
-    $token["userName"]=$a["userName"];
-    $jsonwebtoken = JWT::encode($token,"BI_MAT");
-echo JsonHelper::getJson("token",$jsonwebtoken);
-}else{
-    echo "ERROR";
-}
+$result =$mysqli->query($sql);
 
+$account = mysqli_fetch_assoc($result);
+
+if($account){
+    $jwt = getToken($userName);
+    $array = array('message'=>'Thành công','status'=> true,'token'=>$jwt, 'account'=>$account);
+    print_r(json_encode($array));
+}else{
+    $array = array('status'=> false, 'message'=>'Sai thông tin đăng nhập');
+    print_r(json_encode($array));
+}
 ?>

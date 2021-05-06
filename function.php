@@ -1,8 +1,9 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
-function getToken($userName, $key='example_key'){
+function getToken($userName, $userID ,$key='example_key'){
 	$token = array(
 		"userName" => $userName,
+		"userID" => $userID,
 	    "iat" => time(),
 	    "expire" =>time() + 86400*2 //2 days
 	);

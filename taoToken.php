@@ -20,9 +20,10 @@ $sql = "SELECT a.id, a.userID, a.userName, a.password, a.permission, a.created_a
 $result =$mysqli->query($sql);
 
 $account = mysqli_fetch_assoc($result);
-
+$kk = json_encode($account);
+ $x = json_decode($kk);
 if($account){
-    $jwt = getToken($userName);
+    $jwt = getToken($userName, $x->userID);
     $array = array('message'=>'Thành công','status'=> true,'token'=>$jwt, 'account'=>$account);
     print_r(json_encode($array));
 }else{

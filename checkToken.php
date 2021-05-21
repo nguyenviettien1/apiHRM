@@ -7,7 +7,7 @@ include('function.php');
  $userName = $json->userName;
  $sql = "SELECT b.id, b.name, b.age, b.avatarMobile, b.gender, 
         b.email, b.phone, b.address, b.dateOfBirth, 
-        b.education, b.ethnicity, b.religion, p.description as position,
+        b.education, b.ethnicity, b.religion, b.departmentID, b.positionID,p.description as position,
         d.description as department, b.insurance, b.dayToWork
          FROM account as a
          inner join baccount as b
